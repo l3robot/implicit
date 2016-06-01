@@ -9,9 +9,10 @@ cimport scipy.linalg.cython_lapack as cython_lapack
 cimport scipy.linalg.cython_blas as cython_blas
 
 @cython.boundscheck(False)
-def least_squares(Cui, double [:, :] X, double [:, :] Y, double regularization):
+def least_squares(Cui, Pui, double [:, :] X, double [:, :] Y, double regularization):
     cdef int [:] indptr = Cui.indptr, indices = Cui.indices
     cdef double [:] data = Cui.data
+    cdef double [:] pdata = Pui.data
 
     cdef int users = X.shape[0], factors = X.shape[1], u, i, j, index, err, one = 1
     cdef double confidence, temp
@@ -42,10 +43,12 @@ def least_squares(Cui, double [:, :] X, double [:, :] Y, double regularization):
                 for index in range(indptr[u], indptr[u+1]):
                     i = indices[index]
                     confidence = data[index]
+                    p = pdata[index]
                    
                     # b += Yi Cui Pui
                     # Pui is implicit, its defined to be 1 for non-zero entries
-                    cython_blas.daxpy(&factors, &confidence, &Y[i, 0], &one, b, &one)
+                    if p == 1:
+                        cython_blas.daxpy(&factors, &confidence, &Y[i, 0], &one, b, &one)
 
                     # A += Yi^T Cui Yi
                     # Since we've already added in YtY, we subtract 1 from confidence
