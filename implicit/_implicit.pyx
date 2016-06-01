@@ -15,7 +15,8 @@ def least_squares(Cui, Pui, double [:, :] X, double [:, :] Y, double regularizat
     cdef int [:] pdata = Pui.data
 
     cdef int users = X.shape[0], factors = X.shape[1], u, i, j, index, err, one = 1
-    cdef double confidence, temp, p
+    cdef int p = 0
+    cdef double confidence, temp
 
     YtY = numpy.dot(numpy.transpose(Y), Y)
 
