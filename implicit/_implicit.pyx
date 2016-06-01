@@ -12,7 +12,7 @@ cimport scipy.linalg.cython_blas as cython_blas
 def least_squares(Cui, Pui, double [:, :] X, double [:, :] Y, double regularization):
     cdef int [:] indptr = Cui.indptr, indices = Cui.indices
     cdef double [:] data = Cui.data
-    cdef double [:] pdata = Pui.data
+    cdef int [:] pdata = Pui.data
 
     cdef int users = X.shape[0], factors = X.shape[1], u, i, j, index, err, one = 1
     cdef double confidence, temp, p
@@ -26,7 +26,7 @@ def least_squares(Cui, Pui, double [:, :] X, double [:, :] Y, double regularizat
     cdef double * b
     cdef int * pivot
 
-    print(' [ x ] NEW VERSION [ x ]')
+    print(' [ x ] NEW VERSION2 [ x ]')
 
     with nogil, parallel():
         # allocate temp memory for each thread
@@ -49,7 +49,7 @@ def least_squares(Cui, Pui, double [:, :] X, double [:, :] Y, double regularizat
                    
                     # b += Yi Cui Pui
                     # Pui is implicit, its defined to be 1 for non-zero entries
-                    if p != 0.0:
+                    if p > 0:
                         cython_blas.daxpy(&factors, &confidence, &Y[i, 0], &one, b, &one)
 
                     # A += Yi^T Cui Yi

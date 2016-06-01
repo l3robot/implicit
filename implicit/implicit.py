@@ -63,7 +63,7 @@ def least_squares(Cui, Pui, X, Y, regularization):
         for i, confidence in nonzeros(Cui, u):
             factor = Y[i]
             A += (confidence - 1) * np.outer(factor, factor)
-            if Pui[u,i] != 0:
+            if Pui[u,i] > 0:
                 b += confidence * factor
 
         # Xu = (YtCuY + regularization * I)^-1 (YtCuPu)
