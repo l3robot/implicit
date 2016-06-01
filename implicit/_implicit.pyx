@@ -50,6 +50,7 @@ def least_squares(Cui, Pui, double [:, :] X, double [:, :] Y, double regularizat
                    
                     # b += Yi Cui Pui
                     # Pui is implicit, its defined to be 1 for non-zero entries
+                    # if Pui[u,i] is not 1, fill A but not b 
                     if p > 0:
                         cython_blas.daxpy(&factors, &confidence, &Y[i, 0], &one, b, &one)
 

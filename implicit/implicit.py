@@ -15,6 +15,7 @@ def alternating_least_squares(Cui, Pui, factors, regularization=0.01,
 
     Args:
         Cui (csr_matrix): Confidence Matrix
+        Pui (csr_matrix): Prediction Matrix
         factors (int): Number of factors to extract
         regularization (double): Regularization parameter to use
         iterations (int): Number of alternating least squares iterations to
@@ -63,6 +64,7 @@ def least_squares(Cui, Pui, X, Y, regularization):
         for i, confidence in nonzeros(Cui, u):
             factor = Y[i]
             A += (confidence - 1) * np.outer(factor, factor)
+            # if Pui[u,i] is not 1, fill A but not b 
             if Pui[u,i] > 0:
                 b += confidence * factor
 
